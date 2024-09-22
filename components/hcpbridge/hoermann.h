@@ -134,11 +134,11 @@ public:
     void stopDoor();
     void closeDoor();
     void openDoor();
-    void toogleDoor();
+    void toggleDoor();
     void halfPositionDoor();
     void ventilationPositionDoor();
     void turnLight(bool on);
-    void toogleLight();
+    void toggleLight();
     void setPosition(int setPosition);
 
 private:

@@ -15,7 +15,7 @@ external_components:
     refresh: 0s
 
 esp32:
-  board: adafruit_feather_esp32s3
+  board: #adafruit_feather_esp32s3 #set your board
   framework:
     type: arduino
 
@@ -140,16 +140,13 @@ switch:
     lambda: |-
       return (id(garagedoor_cover).get_cover_state() == HoermannState::VENT);
     optimistic: True
+    restore_mode: disabled #else it fires the action on start of the esp.
     turn_on_action:
       - lambda: |-
           if (id(garagedoor_cover).get_cover_state() != HoermannState::VENT) {
             id(garagedoor_cover).on_go_to_vent();
           }
     turn_off_action:
-      #without wait device not booting
-      - wait_until:
-          condition:
-            binary_sensor.is_on: hcpbridge_id
       - if:
           condition:
             lambda :  |-

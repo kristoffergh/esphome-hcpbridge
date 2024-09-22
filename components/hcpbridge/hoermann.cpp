@@ -318,7 +318,7 @@ void HoermannGarageEngine::openDoor()
 {
   setCommand(true, &HoermannCommand::STARTOPENDOOR);
 }
-void HoermannGarageEngine::toogleDoor()
+void HoermannGarageEngine::toggleDoor()
 {
   setCommand(this->state->currentPosition < 1, &HoermannCommand::STARTOPENDOOR);
   setCommand(this->state->currentPosition >= 1, &HoermannCommand::STARTCLOSEDOOR);
@@ -335,7 +335,7 @@ void HoermannGarageEngine::turnLight(bool on)
 {
   setCommand((on && !this->state->lightOn) || (!on && this->state->lightOn), &HoermannCommand::STARTTOGGLELAMP);
 }
-void HoermannGarageEngine::toogleLight()
+void HoermannGarageEngine::toggleLight()
 {
   setCommand(true, &HoermannCommand::STARTTOGGLELAMP);
 }

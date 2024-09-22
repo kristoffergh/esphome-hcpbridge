@@ -37,6 +37,7 @@ namespace esphome
       traits.set_supports_position(true);
       traits.set_supports_tilt(false);
       traits.set_supports_stop(true);
+      traits.set_supports_toggle(true);
       return traits;
     }
 
@@ -60,6 +61,10 @@ namespace esphome
         {
           this->parent_->engine->setPosition(call.get_position().value() * 100.0f);
         }
+      }
+      if (call.get_toggle())
+      {
+        this->parent_->engine->toggleDoor();
       }
     }
 

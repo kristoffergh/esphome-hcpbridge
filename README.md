@@ -30,7 +30,7 @@ external_components:
     refresh: 0s # Ensure you always get the latest version
 
 esp32:
-  board: adafruit_feather_esp32s3
+  board: #adafruit_feather_esp32s3 #set your board
   framework:
     type: arduino
 
