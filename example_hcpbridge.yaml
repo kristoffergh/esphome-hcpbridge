@@ -77,12 +77,17 @@ light:
     name: Garage Door Light
 
 button:
-  platform: template
-  id: button_vent
-  name: "Garage Door Vent"
-  on_press:
-    - lambda: |-
-        id(garagedoor_cover).on_go_to_vent();
+  - platform: template
+    id: button_vent
+    name: "Garage Door Vent"
+    on_press:
+      - lambda: |-
+          id(garagedoor_cover).on_go_to_vent();
+  - platform: template
+    id: button_impulse
+    name: "Garage Door Impulse"
+    on_press:
+      - cover.toggle: garagedoor_cover
 
 text_sensor:
   - platform: template
@@ -174,6 +179,9 @@ api:
       then:
         - lambda: |-
             id(garagedoor_cover).on_go_to_vent();
+    - service: toggle
+      then:
+        - cover.toggle: garagedoor_cover
 
 web_server:
   port: 80

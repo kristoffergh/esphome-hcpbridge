@@ -35,7 +35,7 @@ class HoermannCommand
 public:
     static const HoermannCommand STARTOPENDOOR;
     static const HoermannCommand STARTCLOSEDOOR;
-    static const HoermannCommand STARTSTOPDOOR;
+    static const HoermannCommand STARTIMPULSE;
     static const HoermannCommand STARTOPENDOORHALF;
     static const HoermannCommand STARTVENTPOSITION;
     static const HoermannCommand STARTTOGGLELAMP;
@@ -134,7 +134,7 @@ public:
     void stopDoor();
     void closeDoor();
     void openDoor();
-    void toggleDoor();
+    void impulseDoor();
     void halfPositionDoor();
     void ventilationPositionDoor();
     void turnLight(bool on);

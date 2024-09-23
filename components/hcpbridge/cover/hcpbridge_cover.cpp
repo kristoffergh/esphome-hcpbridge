@@ -64,7 +64,7 @@ namespace esphome
       }
       if (call.get_toggle())
       {
-        this->parent_->engine->toggleDoor();
+        this->parent_->engine->impulseDoor();
       }
     }
 

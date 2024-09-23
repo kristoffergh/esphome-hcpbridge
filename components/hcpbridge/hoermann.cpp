@@ -6,7 +6,7 @@
 // arg2,arg5> command end   value
 const HoermannCommand HoermannCommand::STARTOPENDOOR = HoermannCommand(0x0210, 0x0110, 0x0000, 0x0000); // Typo 0201
 const HoermannCommand HoermannCommand::STARTCLOSEDOOR = HoermannCommand(0x0220, 0x0120, 0x0000, 0x0000);
-const HoermannCommand HoermannCommand::STARTSTOPDOOR = HoermannCommand(0x0240, 0x0140, 0x0000, 0x0000);
+const HoermannCommand HoermannCommand::STARTIMPULSE = HoermannCommand(0x0240, 0x0140, 0x0000, 0x0000);
 const HoermannCommand HoermannCommand::STARTOPENDOORHALF = HoermannCommand(0x0200, 0x0100, 0x0400, 0x0400);
 const HoermannCommand HoermannCommand::STARTVENTPOSITION = HoermannCommand(0x0200, 0x0100, 0x4000, 0x4000);
 const HoermannCommand HoermannCommand::STARTTOGGLELAMP = HoermannCommand(0x0100, 0x0800, 0x0200, 0x0200);
@@ -308,7 +308,11 @@ void HoermannGarageEngine::setCommand(bool cond, const HoermannCommand *command)
  */
 void HoermannGarageEngine::stopDoor()
 {
-  setCommand(this->state->state == HoermannState::State::CLOSING || this->state->state == HoermannState::State::OPENING, &HoermannCommand::STARTSTOPDOOR);
+  //only send impulse if door is in a moving state
+  setCommand( this->state->state == HoermannState::State::CLOSING || 
+              this->state->state == HoermannState::State::OPENING ||
+              this->state->state == HoermannState::State::MOVE_HALF ||
+              this->state->state == HoermannState::State::MOVE_VENTING , &HoermannCommand::STARTIMPULSE);
 }
 void HoermannGarageEngine::closeDoor()
 {
@@ -318,10 +322,9 @@ void HoermannGarageEngine::openDoor()
 {
   setCommand(true, &HoermannCommand::STARTOPENDOOR);
 }
-void HoermannGarageEngine::toggleDoor()
+void HoermannGarageEngine::impulseDoor()
 {
-  setCommand(this->state->currentPosition < 1, &HoermannCommand::STARTOPENDOOR);
-  setCommand(this->state->currentPosition >= 1, &HoermannCommand::STARTCLOSEDOOR);
+  setCommand(true, &HoermannCommand::STARTIMPULSE);
 }
 void HoermannGarageEngine::halfPositionDoor()
 {
