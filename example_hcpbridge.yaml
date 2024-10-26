@@ -1,5 +1,20 @@
+# Variables to change the name of the entities
+substitutions:
+  name: "hcpbridge"
+  friendly_name: "Garage Door"
+  connection_state: "${name} Connected"
+  relay_name: "${friendly_name} Relay state"
+  light: "${friendly_name} Light"
+  btn_vent: "${friendly_name} Vent" 
+  btn_half: "${friendly_name} Half" 
+  btn_impulse: "${friendly_name} Impulse" 
+  sen_txt: "${friendly_name} State" 
+  sw_vent: "${friendly_name} Venting" 
+  sw_half: "${friendly_name} Open Half" 
+
 esphome:
-  name: hcpbridge
+  name: "${name}"
+  friendly_name: "${friendly_name}"
   libraries:
     - emelianov/modbus-esp8266
   platformio_options:
@@ -20,144 +35,77 @@ esp32:
     type: arduino
 
 hcpbridge:
-  is_connected:
-    name: "HCPBridge Connected"
-    id: hcpbridge_id
+  id: hcpbridge_id
   rx_pin: 18 # optional, default=18
   tx_pin: 17 # optional, default=17
   #rts_pin : 1 # optional RTS pin to use if hardware automatic control flow is not available.
 
 cover:
   - platform: hcpbridge
-    name: Garage Door
+    name: ${friendly_name}
     device_class: garage
     id: garagedoor_cover
 
 binary_sensor:
-  - platform: template
-    name: "Garage Door Light sensor"
-    internal: true 
-    device_class: light
-    id: sensor_light
-    lambda: !lambda |-
-      return (id(garagedoor_cover).get_light_state());
-    on_state:
-    #needed to correct the state fo the light  
-      if:
-        condition:
-          or:
-            - and:
-              - binary_sensor.is_on: sensor_light
-              - light.is_off: light_1
-            - and:
-              - binary_sensor.is_off: sensor_light
-              - light.is_on: light_1
-        then:
-          - light.toggle: light_1
-  - platform: template
-    name: "relay state"
-    id: sensor_relay
-    lambda: !lambda |-
-      return (id(garagedoor_cover).get_relay_state());
-    #on_state:
-    #create your automation based on relay state  
+  - platform: hcpbridge
+    is_connected:
+      name: "${connection_state}"
+      id: sensor_connected
+    relay_state:
+      name: "${relay_name}"
+      id: sensor_relay
+      #on_state:
+      #create your automation based on Garage Door Relay state
 
 output:
-  - platform: template
-    type: binary
+  - platform: hcpbridge
     id: output_light
-    write_action:
-      lambda: !lambda |-
-        id(garagedoor_cover).set_light_state(state);
 
 light:
-  - platform: binary
+  - platform: hcpbridge
+    id: gd_light
     output: output_light
-    id: light_1
-    name: Garage Door Light
+    name: ${light}
 
 button:
-  - platform: template
-    id: button_vent
-    name: "Garage Door Vent"
-    on_press:
-      - lambda: |-
-          id(garagedoor_cover).on_go_to_vent();
-  - platform: template
-    id: button_impulse
-    name: "Garage Door Impulse"
-    on_press:
-      - cover.toggle: garagedoor_cover
+  - platform: hcpbridge
+    vent_button:
+      id: button_vent
+      name: "${btn_vent}"
+    impulse_button:
+      id: button_impulse
+      name: "${btn_impulse}"
+    half_button:
+      id: button_half
+      name: "${btn_half}"
 
 text_sensor:
-  - platform: template
+  - platform: hcpbridge
     id: sensor_templ_state
-    name: "Garage Door State"
-    update_interval: 5s
-    filters:
-      - lambda: |-
-          static std::string last;
-          if (x == last)
-            return {};
-          last = x;
-          return x;
-    lambda: |-
-      std::string stateText;
-      switch (id(garagedoor_cover).get_cover_state()) {
-          case HoermannState::OPENING:
-            stateText = "opening";
-            break;
-          case HoermannState::MOVE_VENTING:
-            stateText = "move venting";
-            break;
-          case HoermannState::MOVE_HALF:
-            stateText = "move half";
-            break;
-          case HoermannState::CLOSING:
-            stateText = "closing";
-            break;
-          case HoermannState::OPEN:
-            stateText = "open";
-            break;
-          case HoermannState::CLOSED:
-            stateText = "closed";
-            break;
-          case HoermannState::STOPPED:
-            stateText = "stopped";
-            break;
-          case HoermannState::HALFOPEN:
-            stateText = "half open";
-            break;
-          case HoermannState::VENT:
-            stateText = "venting";
-            break;
-          default:
-            stateText = "unknown";
-            break;
-        }
-      return {stateText};
-
+    name: "${sen_txt}"
+#    filters:
+#      - substitute:
+#        - "Opening -> your text"
+#        - "Move venting -> your text"
+#        - "Move half -> your text"
+#        - "Closing -> your text"
+#        - "Open -> your text"
+#        - "Closed -> your text"
+#        - "Stopped -> your text"
+#        - "Half open -> your text"
+#        - "Venting -> your text"
+#        - "Unknown -> your text"
 
 switch:
-  - platform: template
-    id: switch_vent
-    name: "Venting"
-    lambda: |-
-      return (id(garagedoor_cover).get_cover_state() == HoermannState::VENT);
-    optimistic: True
-    restore_mode: disabled #else it fires the action on start of the esp.
-    turn_on_action:
-      - lambda: |-
-          if (id(garagedoor_cover).get_cover_state() != HoermannState::VENT) {
-            id(garagedoor_cover).on_go_to_vent();
-          }
-    turn_off_action:
-      - if:
-          condition:
-            lambda :  |-
-              return (id(garagedoor_cover).position != COVER_CLOSED);
-          then:
-            - cover.close: garagedoor_cover
+  - platform: hcpbridge
+    vent_switch:
+      id: switch_vent
+      name: "${sw_vent}"
+      restore_mode: disabled
+    half_switch:
+      id: half_switch
+      name: "${sw_half}"
+      restore_mode: disabled
 
 api:
   encryption:
@@ -201,5 +149,3 @@ logger:
 # Example configuration entry
 ota:
   - platform: esphome
-    safe_mode: true
-
