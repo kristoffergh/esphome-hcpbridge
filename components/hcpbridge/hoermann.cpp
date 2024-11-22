@@ -229,7 +229,7 @@ uint16_t HoermannGarageEngine::onCurrentStateChanged(TRegister *reg, uint16_t va
     case 0x00:
       // Additional check on the low byte when the high byte is 0x00
       if ((val & 0x00FF) == 0x61) {
-        this->state->setState(HoermannState::State::VENTING);
+        this->state->setState(HoermannState::State::VENT);
       } else {
         this->state->setState(HoermannState::State::STOPPED);
       } 
