@@ -196,7 +196,7 @@ uint16_t HoermannGarageEngine::onDoorPositonChanged(TRegister *reg, uint16_t val
 uint16_t HoermannGarageEngine::onCurrentStateChanged(TRegister *reg, uint16_t val)
 {
   // on First Byte changed
-  if (((reg->value & 0xFF00) != (val & 0xFF00)))
+  if ((reg->value & 0xFF00) != (val & 0xFF00))
   {
     ESP_LOGI(TAG_HCI, "onCurrentStateChanged. address=%x, value=%x (actual: %x)", reg->address.address, val, (val & 0xFF00) >> 8);
 
@@ -227,14 +227,12 @@ uint16_t HoermannGarageEngine::onCurrentStateChanged(TRegister *reg, uint16_t va
       this->state->setState(HoermannState::State::VENT);
       break;
     case 0x00:
-      if (this->state->currentPosition == this->state->targetPosition && (int)(this->state->currentPosition * 200) == VENT_POS)
-      {
-        this->state->setState(HoermannState::State::VENT);
-      }
-      else
-      {
+      // Additional check on the low byte when the high byte is 0x00
+      if ((val & 0x00FF) == 0x61) {
+        this->state->setState(HoermannState::State::VENTING);
+      } else {
         this->state->setState(HoermannState::State::STOPPED);
-      }
+      } 
       break;
     default:
       ESP_LOGW(TAG_HCI, "unknown State %x", (val & 0xFF00) >> 8);
