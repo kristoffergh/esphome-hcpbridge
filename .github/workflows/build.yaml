@@ -16,4 +16,4 @@
         - name: Compile
           uses: esphome/build-action@v1
           with:
-            yaml_file: example_hcpbridge.yaml
+            yaml_file: .github/example_build_hcpbridge.yaml
