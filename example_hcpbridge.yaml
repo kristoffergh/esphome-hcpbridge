@@ -11,6 +11,7 @@ substitutions:
   sen_txt: "${friendly_name} State" 
   sw_vent: "${friendly_name} Venting" 
   sw_half: "${friendly_name} Open Half" 
+  sen_pos: "${friendly_name} Position" 
 
 esphome:
   name: "${name}"
@@ -30,7 +31,7 @@ external_components:
     refresh: 0s
 
 esp32:
-  board: #adafruit_feather_esp32s3 #set your board
+  board: adafruit_feather_esp32s3 #set your board
   framework:
     type: arduino
 
@@ -106,6 +107,11 @@ switch:
       id: half_switch
       name: "${sw_half}"
       restore_mode: disabled
+
+sensor:
+  - platform: hcpbridge
+    id: sensor_position
+    name: ${sen_pos}
 
 api:
   encryption:

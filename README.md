@@ -1,12 +1,12 @@
 # esphome-hcpbridge
 
-[![GitHub](https://img.shields.io/github/license/mapero/esphome-hcpbridge)](https://github.com/mapero/esphome-hcpbridge/blob/main/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/mapero/esphome-hcpbridge)](https://github.com/mapero/esphome-hcpbridge)
+[![GitHub](https://img.shields.io/github/license/14yannick/esphome-hcpbridge)](https://github.com/14yannick/esphome-hcpbridge/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/14yannick/esphome-hcpbridge)](https://github.com/14yannick/esphome-hcpbridge)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/mapero)](https://github.com/sponsors/mapero)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/mapero/esphome-hcpbridge/build.yaml)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/14yannick/esphome-hcpbridge/build.yaml)
 
 
-This is a esphome-based adaption of the HCPBridge. Credits for the initial development of the HCPBridge go to [Gifford47](https://github.com/Gifford47/HCPBridgeMqtt), [hkiam](https://github.com/hkiam/HCPBridge) and all the other guys contributed.
+This is a esphome-based adaption of the HCPBridge. thanks to [mapero](https://github.com/14yannick/esphome-hcpbridge) for the initial esphome port. Credits for the initial development of the HCPBridge go to [Gifford47](https://github.com/Gifford47/HCPBridgeMqtt), [hkiam](https://github.com/hkiam/HCPBridge) and all the other guys contributed.
 
 ## Usage
 
@@ -100,6 +100,15 @@ text_sensor:
   - platform: hcpbridge
     id: sensor_templ_state
     name: "Garage Door State"
+```
+### sensor
+
+This component provide you the position of the door in %. Where 100% is fully open.
+```YAML
+sensor:
+  - platform: hcpbridge
+    id: sensor_position
+    name: ${sen_pos}
 ```
 ### Button
 
