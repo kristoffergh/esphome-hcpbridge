@@ -10,10 +10,8 @@
       name: Build
       runs-on: ubuntu-latest
       steps:
-        - name: Checkout
-          uses: actions/checkout@v3
-
+        - name: Checkout source code
+          uses: actions/checkout@v4.1.7
         - name: Compile
-          uses: esphome/build-action@v1
-          with:
+          uses: esphome/build-action@v4.0.3
             yaml_file: .github/example_build_hcpbridge.yaml
