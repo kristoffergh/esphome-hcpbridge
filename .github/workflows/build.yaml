@@ -1,18 +1,21 @@
 ---
-  name: Build Component
+name: Build Component
 
-  on:
-    push:
-    pull_request:
+on:
+  push:
+  pull_request:
 
-  jobs:
-    build:
-      name: Build
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout source code
-          uses: actions/checkout@v4.1.7
-        - name: Compile
-          uses: esphome/build-action@v4.0.3
-          with:
-            yaml_file: .github/example_build_hcpbridge.yaml
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the source code
+      - name: Checkout source code
+        uses: actions/checkout@v5
+
+      # Build ESPHome binary
+      - name: Compile
+        uses: esphome/build-action@v5
+        with:
+          configuration: .github/example_build_hcpbridge.yaml
