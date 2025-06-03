@@ -13,6 +13,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4.1.7
       - name: Compile
-        uses: esphome/build-action@v4.0.3
+        uses: esphome/build-action@v6
         with:
           yaml-file: .github/example_build_hcpbridge.yaml
